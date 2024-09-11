@@ -77,10 +77,10 @@ def geopoints(data):
 
 def create_map(data_activos):
     m = folium.Map(location=[4.687103, -74.058094], zoom_start=12, tiles="cartodbpositron")
-    if data_activos is not None and not data_activos.empty:
-        datagjson = geopoints(data_activos)
-        folium.GeoJson(datagjson, name="geojson").add_to(m)
-    folium.LayerControl().add_to(m)
+    #if data_activos is not None and not data_activos.empty:
+    #    datagjson = geopoints(data_activos)
+    #    folium.GeoJson(datagjson, name="geojson").add_to(m)
+    #folium.LayerControl().add_to(m)
     return m
 
 if __name__ == "__main__":
