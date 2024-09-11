@@ -23,13 +23,13 @@ def main():
     with st.spinner('Cargando información'):
         data_base, data_activos, data_vehiculos, data_lasttrans, data_anotaciones = getdata()
 
-        if data_base is not None:
-            col1, col2 = st.columns(2)
-            with col2:
-                m = create_map(data_activos)
-                map_data = st_folium(m, width=int(mapwidth*0.7), height=height)
-        else:
-            st.error("No se pudieron cargar los datos. Por favor, intente nuevamente más tarde.")
+
+    if data_base is not None:
+        col1, col2 = st.columns(2)
+        with col2:
+            m = create_map(data_activos)
+            map_data = st_folium(m, width=int(mapwidth*0.7), height=height)
+                
 
 
 @st.cache_data(show_spinner=False)
