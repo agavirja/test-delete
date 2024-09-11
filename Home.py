@@ -28,15 +28,6 @@ def main():
             with col2:
                 m = create_map(data_activos)
                 map_data = st_folium(m, width=int(mapwidth*0.7), height=height)
-                
-                if map_data['last_clicked']:
-                    st.write("Coordenadas del último clic:", map_data['last_clicked'])
-                
-                if map_data['last_object_clicked']:
-                    st.write("Último objeto clickeado:", map_data['last_object_clicked'])
-                
-                st.write("Bounds del mapa:", map_data['bounds'])
-                st.write("Zoom actual:", map_data['zoom'])
         else:
             st.error("No se pudieron cargar los datos. Por favor, intente nuevamente más tarde.")
 
