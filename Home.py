@@ -5,7 +5,7 @@ import mysql.connector as sql
 import folium
 import plotly.express as px
 from sqlalchemy import create_engine, types
-from streamlit_folium import st_folium
+from streamlit_folium import folium_static
 from bs4 import BeautifulSoup
 from shapely.geometry import Point
 
@@ -28,7 +28,7 @@ def main():
         col1, col2 = st.columns(2)
         with col2:
             m = create_map(data_activos)
-            map_data = st_folium(m, width=int(mapwidth*0.7), height=height)
+            folium_static(m, width=int(mapwidth*0.7), height=height)
                 
 
 
