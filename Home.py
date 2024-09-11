@@ -16,6 +16,14 @@ def main():
     mapwidth = 1900
     height   = 500
     
+    formato = {
+               'delay':0,
+               }
+
+    for key,value in formato.items():
+        if key not in st.session_state: 
+            st.session_state[key] = value
+            
     col1, col2, col3 = st.columns([6,1,1])
     with col2:
         st.image('https://ingeurbe.com/wp-content/uploads/elementor/thumbs/LOGO-39-ANOS_v2_ing-1-1-qtuw7n0byqtxcj89rf8jqp43j6zlaj8lx4y9j36ups.png', width=400)
@@ -28,6 +36,10 @@ def main():
         col1, col2 = st.columns(2)
         with col2:
             draw_map(data_activos)
+            if st.session_state.delay==0:
+                st.session_state.delay = 1
+                st.rerun()
+            
                 
 
 @st.cache_data(show_spinner=False)
