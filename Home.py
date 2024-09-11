@@ -34,6 +34,24 @@ def main():
             st_map = st_folium(m,width=int(mapwidth*0.7),height=500)
 
 @st.cache_data(show_spinner=False)
+def getdata():
+    
+    user     = st.secrets["user_bigdata"]
+    password = st.secrets["password_bigdata"]
+    host     = st.secrets["host_bigdata_lectura"]
+    engine   = create_engine(f'mysql+mysqlconnector://{user}:{password}@{host}/urbex')
+    
+    data_base        = pd.read_sql_query("SELECT * FROM  urbex.ingeurbe_data_base" , engine)
+    data_activos     = pd.read_sql_query("SELECT * FROM  urbex.ingeurbe_data_activos" , engine)
+    data_vehiculos   = pd.read_sql_query("SELECT * FROM  urbex.ingeurbe_data_vehiculos" , engine)
+    data_lasttrans   = pd.read_sql_query("SELECT * FROM  urbex.ingeurbe_data_lasttrans" , engine)
+    data_anotaciones = pd.read_sql_query("SELECT * FROM  urbex.ingeurbe_data_anotaciones" , engine)
+
+    engine.dispose()
+
+    return data_base,data_activos,data_vehiculos,data_lasttrans,data_anotaciones
+
+@st.cache_data(show_spinner=False)
 def geopoints(data):
     
     geojson = pd.DataFrame().to_json()
@@ -49,25 +67,6 @@ def geopoints(data):
         geojson          = data.to_json()
         
     return geojson
-
-@st.cache_data(show_spinner=False)
-def getdata():
-    
-    user     = st.secrets["user_bigdata"]
-    password = st.secrets["password_bigdata"]
-    host     = st.secrets["host_bigdata_lectura"]
-    engine   = create_engine(f'mysql+mysqlconnector://{user}:{password}@{host}/urbex')
-    
-    data_base        = pd.read_sql_query("SELECT * FROM  schema.data" , engine)
-    data_activos     = pd.read_sql_query("SELECT * FROM  schema.data1" , engine)
-    data_vehiculos   = pd.read_sql_query("SELECT * FROM  schema.data2" , engine)
-    data_lasttrans   = pd.read_sql_query("SELECT * FROM  schema.data3" , engine)
-    data_anotaciones = pd.read_sql_query("SELECT * FROM  schema.data4" , engine)
-
-    engine.dispose()
-
-    return data_base,data_activos,data_vehiculos,data_lasttrans,data_anotaciones
-
 
 if __name__ == "__main__":
     main()
