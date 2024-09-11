@@ -27,7 +27,7 @@ def main():
     if data_base is not None:
         col1, col2 = st.columns(2)
         with col2:
-            draw_map()
+            draw_map(data_activos)
                 
 
 @st.cache_data(show_spinner=False)
@@ -63,17 +63,13 @@ def geopoints(data):
     
     return pd.DataFrame().to_json()
 
-@st.cache_data
-def create_map(data_activos):
+
+@st.fragment
+def draw_map(data_activos):
     m = folium.Map(location=[4.687103, -74.058094], zoom_start=12, tiles="cartodbpositron")
     if data_activos is not None and not data_activos.empty:
         datagjson = geopoints(data_activos)
         folium.GeoJson(datagjson, name="geojson").add_to(m)
-    return m
-
-@st.fragment
-def draw_map():
-    m  = create_map()
     st_folium(m, width=1900, height=500)
 
 if __name__ == "__main__":
