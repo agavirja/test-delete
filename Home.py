@@ -5,11 +5,12 @@ import mysql.connector as sql
 import folium
 import plotly.express as px
 from sqlalchemy import create_engine, types
-from streamlit_folium import folium_static
+from streamlit_folium import st_folium
 from bs4 import BeautifulSoup
 from shapely.geometry import Point
 
 st.set_page_config(layout="wide")
+
 
 def main():
     mapwidth = 1900
@@ -26,9 +27,19 @@ def main():
             col1, col2 = st.columns(2)
             with col2:
                 m = create_map(data_activos)
-                folium_static(m, width=int(mapwidth*0.7), height=height)
+                map_data = st_folium(m, width=int(mapwidth*0.7), height=height)
+                
+                if map_data['last_clicked']:
+                    st.write("Coordenadas del último clic:", map_data['last_clicked'])
+                
+                if map_data['last_object_clicked']:
+                    st.write("Último objeto clickeado:", map_data['last_object_clicked'])
+                
+                st.write("Bounds del mapa:", map_data['bounds'])
+                st.write("Zoom actual:", map_data['zoom'])
         else:
             st.error("No se pudieron cargar los datos. Por favor, intente nuevamente más tarde.")
+
 
 @st.cache_data(show_spinner=False)
 def getdata():
@@ -45,7 +56,8 @@ def getdata():
         data_anotaciones = pd.read_sql_query("SELECT * FROM  urbex.ingeurbe_data_anotaciones" , engine)
         engine.dispose()
         return data_base, data_activos, data_vehiculos, data_lasttrans, data_anotaciones
-    except:
+    except Exception as e:
+        st.error(f"Error al cargar datos: {str(e)}")
         return None, None, None, None, None
 
 @st.cache_data(show_spinner=False)
@@ -59,7 +71,6 @@ def geopoints(data):
     if not data.empty:
         data['geometry'] = data.apply(lambda x: Point(x['longitud'], x['latitud']), axis=1)
         data = gpd.GeoDataFrame(data, geometry='geometry')
-        data = data[['geometry']]
         return data.to_json()
     
     return pd.DataFrame().to_json()
@@ -68,7 +79,8 @@ def create_map(data_activos):
     m = folium.Map(location=[4.687103, -74.058094], zoom_start=12, tiles="cartodbpositron")
     if data_activos is not None and not data_activos.empty:
         datagjson = geopoints(data_activos)
-        folium.GeoJson(datagjson).add_to(m)
+        folium.GeoJson(datagjson, name="geojson").add_to(m)
+    folium.LayerControl().add_to(m)
     return m
 
 if __name__ == "__main__":
