@@ -72,6 +72,8 @@ def main():
 
     with right_column:
         draw_map()
+        
+    hola = st.selectbox('Hola',options=['1','2','3'])
 
 
 if __name__ == "__main__":
