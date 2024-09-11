@@ -3,6 +3,7 @@ import pandas as pd
 import geopandas as gpd
 import mysql.connector as sql
 import folium
+import time
 import plotly.express as px
 from sqlalchemy import create_engine, types
 from streamlit_folium import st_folium
@@ -37,6 +38,7 @@ def main():
         with col2:
             draw_map(data_activos)
             if st.session_state.delay==0:
+                time.sleep(2)
                 st.session_state.delay = 1
                 st.rerun()
             
